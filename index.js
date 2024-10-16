@@ -1,8 +1,9 @@
 import { bookArray } from "./book.js";
 
-const initialBooksToShow = 4
+const initialBooksToShow = 8
 const booksToAddOrRemove = 4
 let totalBooksRendered = initialBooksToShow;
+
 
 document.addEventListener("click", (e) => {
     if (e.target.id ==="view-more"){
@@ -13,25 +14,30 @@ document.addEventListener("click", (e) => {
     }
 })
 
+renderBooks(totalBooksRendered)
+
 function viewMore() {
     totalBooksRendered += booksToAddOrRemove
   
     if (totalBooksRendered >= bookArray.length) {
       document.getElementById("view-more").classList.add("hidden")
-      document.getElementById("view-less").classList.remove("hidden")
-    }
+    } 
+    
   
-    renderBooks(totalBooksRendered);
+    // LB-1-modify-links issue
+    // Keep showing "View Less" once "View More" has been clicked
+    document.getElementById("view-less").classList.remove("hidden")
+    
+  
+    renderBooks(totalBooksRendered)
   }
 
   function viewLess() {
-    if (totalBooksRendered >= initialBooksToShow + booksToAddOrRemove) {
-        totalBooksRendered -= booksToAddOrRemove
-      }
-    else{
-        totalBooksRendered = initialBooksToShow
-        document.getElementById("view-more").classList.remove("hidden")
+    totalBooksRendered = Math.max(initialBooksToShow, totalBooksRendered - booksToAddOrRemove)
+
+    if (totalBooksRendered <= initialBooksToShow) {
         document.getElementById("view-less").classList.add("hidden")
+        document.getElementById("view-more").classList.remove("hidden")
     }
     
       renderBooks(totalBooksRendered);
@@ -39,7 +45,7 @@ function viewMore() {
 
 function renderBooks(totalBooks){
     let booksHtml = ""
-    const maxBooks = Math.min(totalBooks, bookArray.length);
+    const maxBooks = Math.min(totalBooks, bookArray.length)
     for (let i = 0; i<maxBooks; i++){
         const {image, title, author, id} = bookArray[i]
         booksHtml += `
@@ -57,5 +63,3 @@ function renderBooks(totalBooks){
     }
     document.getElementById("book-container").innerHTML = booksHtml
 }
-
-renderBooks(totalBooksRendered);
